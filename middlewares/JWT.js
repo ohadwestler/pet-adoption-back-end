@@ -6,9 +6,9 @@ dotenv.config()
 
 export function createTokens(user) {
   const accessToken = sign(
-    { password: user.password, email: user.email },
+    { email: user.email },
     process.env.SECRETKEY,
-    { expiresIn: 3000 }
+    {algorithm: "HS256", expiresIn: 3000 }
   );
 
   return accessToken;

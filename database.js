@@ -13,7 +13,7 @@ export const db = mysql.createPool({
 });
 
 db.getConnection(function (err) {
-  if (err) connection.release();
+  if (err) db.release();
   console.log("Connected!");
   const sqlUsers =
     "CREATE TABLE if not exists users (email VARCHAR(45), firstname VARCHAR(45), lastName VARCHAR(45), password VARCHAR(500), phone VARCHAR(45), bio VARCHAR(45), role VARCHAR(45))";
