@@ -32,7 +32,7 @@ async function updateUserControl(req, res, next) {
           const accessToken = createTokens({ email, password });
 
           res.cookie(process.env.TOKENKEY, accessToken, {
-            maxAge: 60 * 60 * 24 * 30 * 1000,
+            maxAge: 3000 * 1000,
             httpOnly: false,
           });
           checkIfAdmin
@@ -110,7 +110,7 @@ async function signUpControl(req, res, next) {
           const accessToken = createTokens({ email, password });
 
           res.cookie(process.env.TOKENKEY, accessToken, {
-            maxAge: 60 * 60 * 24 * 30 * 1000,
+            maxAge: 3000 * 1000,
             httpOnly: false,
           });
           res.status(200).json({ email, firstname, lastName, hash, phone });
@@ -138,7 +138,7 @@ async function loginControl(req, res, next) {
         if (responsePassword) {
           const accessToken = createTokens(user[0]);
           res.cookie(process.env.TOKENKEY, accessToken, {
-            maxAge: 60 * 60 * 24 * 30 * 1000,
+            maxAge: 3000 * 1000,
             httpOnly: false,
           });
           res.json({ auth: true, accessToken, user });
