@@ -8,7 +8,7 @@ export function createTokens(user) {
   const accessToken = sign(
     { email: user.email },
     process.env.SECRETKEY,
-    {algorithm: "HS256", expiresIn: 3000 }
+    {algorithm: "HS256", expiresIn: 300000 }
   );
 
   return accessToken;
