@@ -9,13 +9,10 @@ const storage = multer.diskStorage({
       cb(null, file.fieldname + '-' + uniqueSuffix)
     }
   })
-    // 'avatar' is the name of our file input field in the HTML form
 
     let upload = multer({ storage: storage}).single('avatar');
 
     upload(req, res, function(err) {
-        // req.file contains information of uploaded file
-        // req.body contains information of text fields
 
         if (!req.file) {
             return res.send('Please select an image to upload');

@@ -4,20 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "cross-env NODE_ENV=production nodemon server.js",
+    "dev": "cross-env NODE_ENV=development nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
+},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/israeltechchallenge/fs_pet_adoption_be-ohadwestler.git"
+    "url": "git+https://github.com/ohadwestler/pet-adoption-back-end.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/israeltechchallenge/fs_pet_adoption_be-ohadwestler/issues"
+    "url": "https://github.com/ohadwestler/pet-adoption-back-end/issues"
   },
-  "homepage": "https://github.com/israeltechchallenge/fs_pet_adoption_be-ohadwestler#readme",
+  "homepage": "https://github.com/ohadwestler/pet-adoption-back-end#readme",
   "dependencies": {
     "ajv": "^8.11.0",
     "ajv-formats": "^2.1.1",
@@ -38,6 +39,7 @@
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "nodemon": "^2.0.15"
   },
   "type": "module"

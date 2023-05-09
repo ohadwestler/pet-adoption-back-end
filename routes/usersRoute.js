@@ -5,9 +5,10 @@ import { validateToken } from "../middlewares/JWT.js";
 import validation from "../middlewares/validation.js";
 import { UserDetailsSchema } from "../middlewares/userSchema.js";
 import { userLoginSchema } from "../middlewares/userSchema.js";
+import { checkIfAdmin } from "../middlewares/isAdmin.js";
 
 const router = express.Router();
-router.get("/users/",validateToken, userController.sendIfAdminControl)
+router.get("/users/",validateToken, checkIfAdmin, userController.getAllUsersControl)
 
 router.put("/changes/",validateToken, validation(UserDetailsSchema),userController.updateUserControl);
 
