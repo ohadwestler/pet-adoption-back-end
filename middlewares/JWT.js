@@ -15,14 +15,13 @@ export function createTokens(user) {
 }
 
 export function validateToken(req, res, next) {
-  const accessToken = req.cookies[process.env.TOKENKEY];
-
-  if (!accessToken) {
-    return res.status(400).json({ message: "Token is expired, please reconnect!" });
+  const token = req.headers['authorization'];
+  if (!token) {
+    return res.status(400).json({ message: "Token is missing, please reconnect!" });
   }
 
   try {
-    const validToken = verify(accessToken, process.env.SECRETKEY);
+    const validToken = verify(token, process.env.SECRETKEY);
     if (validToken) {
       req.body.loginEmail = validToken.email;
       req.params.loginEmail = validToken.email;
@@ -34,3 +33,4 @@ export function validateToken(req, res, next) {
     return res.status(400).json({ message: "Token is expired, please reconnect!" });
   }
 }
+

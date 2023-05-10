@@ -14,25 +14,16 @@ async function hashPassword(password) {
   });
 }
 
-function setAccessTokenCookie(res, email, password) {
-  const accessToken = createTokens({ email, password });
-  res.cookie(process.env.TOKENKEY, accessToken, {
-    maxAge: 30000 * 1000,
-    httpOnly: false,
-    secure: true,
-    smaeSite: "none",
-  });
-}
-
 async function handleSuccessfulUpdate(res, email, password) {
-  setAccessTokenCookie(res, email, password);
-  res.status(200).json({ message: "updated!" });
+  const accessToken = createTokens({ email, password });
+  res.status(200).json({ message: "updated!", accessToken });
 }
 
 async function passwordMatch(req, res) {
   const { password, confirmPasswad } = req.body;
 
   if (password !== confirmPasswad) {
+    console.log(password, confirmPasswad);
     res
       .status(400)
       .json({ message: "Password and confirm password are not the same" });
@@ -109,8 +100,8 @@ async function signUpControl(req, res, next) {
     if (!user) {
       res.status(401).send({ message: "Email already exists" });
     } else {
-      setAccessTokenCookie(res, email, password);
-      res.status(200).json({ email, firstname, lastName, phone });
+      const accessToken = createTokens({ email, password });
+      res.status(200).json({ email, firstname, lastName, phone, accessToken });
     }
   } catch (err) {
     next(err);
@@ -129,8 +120,8 @@ async function loginControl(req, res, next) {
 
     bcrypt.compare(password, user[0].password, (err, isPasswordValid) => {
       if (isPasswordValid) {
-        setAccessTokenCookie(res, email, password);
-        res.json({ auth: true, user });
+        const accessToken = createTokens({ email, password });
+        res.status(200).json({ auth: true, user, accessToken });
       } else {
         res.status(401).send("Wrong password!");
       }

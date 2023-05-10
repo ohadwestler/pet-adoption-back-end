@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import usersRoute from "./routes/usersRoute.js";
@@ -14,7 +13,6 @@ const { PORT, NODE_ENV } = process.env;
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 const corsOptions = {
   methods: ["GET", "POST", "PUT", "DELETE"],

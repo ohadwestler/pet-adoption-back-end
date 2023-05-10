@@ -19,13 +19,6 @@ router.post("/adduser", validation(UserDetailsSchema), userController.signUpCont
 router.post("/auth", validation(userLoginSchema), userController.loginControl);
 
 
-router.get("/disconnect", function(req, res){
-    res.clearCookie('access-token');
-    res.send("Cookie cleared")
-      console.log("Cookie cleared");
-  });
-
-
 
 
 

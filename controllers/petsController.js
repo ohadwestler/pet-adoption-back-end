@@ -80,11 +80,10 @@ async function updatePetControl(req, res, next) {
   } = req.body;
 
   const petId = req.params.petId;
-
   try {
     const updateThePet = await petsModel.updatePetDb(
-      name,
       type,
+      name,
       color,
       diet,
       weight,
