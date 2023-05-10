@@ -12,7 +12,7 @@ async function saveControl(req, res, next) {
       return;
     }
 
-    res.status(200).send(result);
+    res.status(200).send('suceessfully saved');
   } catch (err) {
     next(err);
   }

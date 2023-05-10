@@ -14,55 +14,37 @@ async function hashPassword(password) {
   });
 }
 
-async function handleSuccessfulUpdate(
-  res,
-  user,
-  email,
-  firstname,
-  lastName,
-  bio,
-  phone
-) {
-  const checkIfAdmin = await usersModel.checkIfAdmin(email);
-  const accessToken = createTokens(user);
+function setAccessTokenCookie(res, email, password) {
+  const accessToken = createTokens({ email, password });
   res.cookie(process.env.TOKENKEY, accessToken, {
-    maxAge: 3000 * 1000,
+    maxAge: 30000 * 1000,
     httpOnly: false,
   });
+}
 
-  const responsePayload = {
-    email,
-    firstname,
-    lastName,
-    bio,
-    phone,
-    message: "updated!",
-  };
+async function handleSuccessfulUpdate(res, email, password) {
+  setAccessTokenCookie(res, email, password);
+  res.status(200).json({ message: "updated!" });
+}
 
-  if (checkIfAdmin) {
-    responsePayload.role = "admin";
+async function passwordMatch(req, res) {
+  const { password, confirmPasswad } = req.body;
+
+  if (password !== confirmPasswad) {
+    res
+      .status(400)
+      .json({ message: "Password and confirm password are not the same" });
+    return false;
   }
 
-  res.status(200).json(responsePayload);
+  return true;
 }
 
 async function updateUserControl(req, res, next) {
-  const {
-    email,
-    firstname,
-    lastName,
-    password,
-    phone,
-    confirmPasswad,
-    bio,
-    loginEmail,
-  } = req.body;
+  if (!(await passwordMatch(req, res))) return;
 
-  if (password !== confirmPasswad) {
-    return res
-      .status(400)
-      .json({ message: "Password and confirm password are not the same" });
-  }
+  const { email, firstname, lastName, password, phone, bio, loginEmail } =
+    req.body;
 
   try {
     const hash = await hashPassword(password);
@@ -79,7 +61,7 @@ async function updateUserControl(req, res, next) {
     if (!user) {
       res.status(401).send({ message: "Email already exists" });
     } else {
-      handleSuccessfulUpdate(res, user, email, firstname, lastName, bio, phone);
+      handleSuccessfulUpdate(res, email, password);
     }
   } catch (err) {
     next(err);
@@ -108,14 +90,9 @@ async function checkTokenControl(req, res, next) {
 }
 
 async function signUpControl(req, res, next) {
-  const { email, firstname, lastName, password, phone, confirmPasswad } =
-    req.body;
+  if (!(await passwordMatch(req, res))) return;
 
-  if (password !== confirmPasswad) {
-    return res
-      .status(400)
-      .json({ message: "Password and confirm password are not the same" });
-  }
+  const { email, firstname, lastName, password, phone } = req.body;
 
   try {
     const hash = await hashPassword(password);
@@ -130,11 +107,7 @@ async function signUpControl(req, res, next) {
     if (!user) {
       res.status(401).send({ message: "Email already exists" });
     } else {
-      const accessToken = createTokens({ email, password });
-      res.cookie(process.env.TOKENKEY, accessToken, {
-        maxAge: 3000 * 1000,
-        httpOnly: false,
-      });
+      setAccessTokenCookie(res, email, password);
       res.status(200).json({ email, firstname, lastName, phone });
     }
   } catch (err) {
@@ -154,12 +127,8 @@ async function loginControl(req, res, next) {
 
     bcrypt.compare(password, user[0].password, (err, isPasswordValid) => {
       if (isPasswordValid) {
-        const accessToken = createTokens(user[0]);
-        res.cookie(process.env.TOKENKEY, accessToken, {
-          maxAge: 3000 * 1000,
-          httpOnly: false,
-        });
-        res.json({ auth: true, accessToken, user });
+        setAccessTokenCookie(res, email, password);
+        res.json({ auth: true, user });
       } else {
         res.status(401).send("Wrong password!");
       }

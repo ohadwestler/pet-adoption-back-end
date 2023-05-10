@@ -22,7 +22,7 @@ async function update(bio, email, firstname, lastName, hash, phone, loginEmail) 
     const querySavedPets = "UPDATE savepets SET email = ? WHERE email = ?";
 
     const resultIfExist = await promiseQuery(queryIfExist, [email]);
-
+console.log(loginEmail, email);
     if (resultIfExist.length === 0 || loginEmail === resultIfExist[0].email) {
       await promiseQuery(queryOfInsertingUser, [bio, email, firstname, lastName, hash, phone, loginEmail]);
       await promiseQuery(queryPets, [email, loginEmail]);
@@ -58,7 +58,7 @@ async function signUp(email, firstname, lastName, hash, phone) {
 
 async function checkIfAdmin(email) {
   try {
-    const queryIfExist = "SELECT * FROM users WHERE email = ?";
+    const queryIfExist = "SELECT role FROM users WHERE email = ?";
     const resultIfExist = await promiseQuery(queryIfExist, [email]);
     return resultIfExist[0]?.role === "admin" ? true : false;
   } catch (err) {

@@ -126,7 +126,7 @@ async function makeAvilableController(req, res, next) {
   const { id } = req.params || "";
 
   try {
-    const result = await petsModel.makeAvialableDb(id, loginEmail);
+    const result = await petsModel.makeAvailableDb(id, loginEmail);
 
     if (!result) {
       res.status(401).send({ message: "Not found" });
@@ -145,7 +145,7 @@ async function getPetsOfUserControl(req, res, next) {
   try {
     const resultOfFostered = await petsModel.getPetsOfUserFosterFromDB(email);
     const resultOfAdopted = await petsModel.getPetsOfUserAdoptFromDB(email);
-    const resultOfSaved = await petsModel.getPetsOfUsesavedFromDB(email);
+    const resultOfSaved = await petsModel.getPetsOfUserSavedFromDB(email);
 
     if (!(resultOfSaved || resultOfFostered || resultOfAdopted)) {
       res.status(401).send({ message: "No pets saved, fostered or adopted" });

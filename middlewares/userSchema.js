@@ -8,8 +8,6 @@ const userLoginSchema = {
   additionalProperties: false,
 };
 
-
-
 const UserDetailsSchema = {
   type: "object",
   properties: {
@@ -21,7 +19,6 @@ const UserDetailsSchema = {
     phone: { type: "string", minLength: 2 },
     confirmPasswad: { type: ["string", "integer"], minLength: 6 },
     bio: { type: ["string", "integer"] },
-
   },
 
   required: [
