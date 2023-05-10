@@ -19,6 +19,8 @@ function setAccessTokenCookie(res, email, password) {
   res.cookie(process.env.TOKENKEY, accessToken, {
     maxAge: 30000 * 1000,
     httpOnly: false,
+    secure: true,
+    smaeSite: "none",
   });
 }
 
